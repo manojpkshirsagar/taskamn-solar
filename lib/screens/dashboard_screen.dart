@@ -41,29 +41,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    final results = await Future.wait([
-      SupabaseService.instance.fetchCustomers(),
-      SupabaseService.instance.fetchLabels(),
-      SupabaseService.instance.fetchAllCustomerLabels(),
-      SupabaseService.instance.fetchTasks(),
-      SupabaseService.instance.fetchLoans(),
-    ]);
+    try {
+      final results = await Future.wait([
+        SupabaseService.instance.fetchCustomers(),
+        SupabaseService.instance.fetchLabels(),
+        SupabaseService.instance.fetchAllCustomerLabels(),
+        SupabaseService.instance.fetchTasks(),
+        SupabaseService.instance.fetchLoans(),
+      ]);
 
-    final customers = results[0] as List<Customer>;
-    final lbs = results[1] as List<Label>;
-    final clbs = results[2] as List<CustomerLabel>;
-    final tasksData = results[3] as List<Task>;
-    final loansData = results[4] as List<Loan>;
+      final customers = results[0] as List<Customer>;
+      final lbs = results[1] as List<Label>;
+      final clbs = results[2] as List<CustomerLabel>;
+      final tasksData = results[3] as List<Task>;
+      final loansData = results[4] as List<Loan>;
 
-    if (mounted) {
-      setState(() {
-        _customers = customers;
-        _labels = lbs;
-        _customerLabels = clbs;
-        _tasks = tasksData;
-        _loans = loansData;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _customers = customers;
+          _labels = lbs;
+          _customerLabels = clbs;
+          _tasks = tasksData;
+          _loans = loansData;
+          _isLoading = false;
+        });
+      }
+    } catch (e, stack) {
+      debugPrint("Dashboard load data error: $e");
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

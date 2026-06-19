@@ -14,6 +14,7 @@ import '../models/label.dart';
 import '../models/customer_label.dart';
 import '../models/import_export_history.dart';
 import 'logger_service.dart';
+import 'connectivity_service.dart';
 import 'package:uuid/uuid.dart';
 
 class SupabaseService {
@@ -23,6 +24,7 @@ class SupabaseService {
 
   bool _isMockMode = true;
   bool get isMockMode => _isMockMode;
+  bool get _shouldUseLocalData => _isMockMode || !ConnectivityService.instance.isOnline;
 
   // Change these to your actual Supabase project credentials in production
   static const String supabaseUrl = 'https://gbdllbncblhhrzekhngi.supabase.co';
@@ -120,7 +122,7 @@ class SupabaseService {
 
   // --- Customers API ---
   Future<List<Customer>> fetchCustomers() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getCustomers();
     } else {
       try {
@@ -227,7 +229,7 @@ class SupabaseService {
 
   // --- Tasks API ---
   Future<List<Task>> fetchTasks() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getTasks();
     } else {
       try {
@@ -264,7 +266,7 @@ class SupabaseService {
 
   // --- Employees API ---
   Future<List<Employee>> fetchEmployees() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getEmployees();
     } else {
       try {
@@ -295,7 +297,7 @@ class SupabaseService {
 
   // --- Service Requests ---
   Future<List<ServiceRequest>> fetchServiceRequests() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getServiceRequests();
     } else {
       try {
@@ -328,7 +330,7 @@ class SupabaseService {
 
   // --- Installation Photos & Storage ---
   Future<InstallationPhotos?> fetchInstallationPhotos(String customerId) async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       final list = StorageService.getInstallationPhotos();
       final idx = list.indexWhere((p) => p.customerId == customerId);
       return idx >= 0 ? list[idx] : null;
@@ -385,7 +387,7 @@ class SupabaseService {
 
   // --- Loans API ---
   Future<List<Loan>> fetchLoans() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getLoans();
     } else {
       try {
@@ -421,7 +423,7 @@ class SupabaseService {
   }
 
   Future<Loan?> fetchLoanById(String id) async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       final list = StorageService.getLoans();
       final idx = list.indexWhere((l) => l.id == id);
       return idx >= 0 ? list[idx] : null;
@@ -449,7 +451,7 @@ class SupabaseService {
 
   // --- Loan Tasks API ---
   Future<List<LoanTask>> fetchLoanTasks(String loanId) async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getLoanTasksForLoan(loanId);
     } else {
       try {
@@ -511,7 +513,7 @@ class SupabaseService {
 
   // --- Labels, Categories & CustomerLabels API ---
   Future<List<LabelCategory>> fetchLabelCategories() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getLabelCategories();
     } else {
       try {
@@ -554,7 +556,7 @@ class SupabaseService {
   }
 
   Future<List<Label>> fetchLabels() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getLabels();
     } else {
       try {
@@ -586,7 +588,7 @@ class SupabaseService {
   }
 
   Future<List<CustomerLabel>> fetchCustomerLabels(String customerId) async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getCustomerLabelsForCustomer(customerId);
     } else {
       try {
@@ -630,7 +632,7 @@ class SupabaseService {
   }
 
   Future<List<CustomerLabel>> fetchAllCustomerLabels() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getCustomerLabels();
     } else {
       try {
@@ -648,7 +650,7 @@ class SupabaseService {
 
   // --- Import / Export History API ---
   Future<List<ImportHistory>> fetchImportHistory() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getImportHistory();
     } else {
       try {
@@ -676,7 +678,7 @@ class SupabaseService {
   }
 
   Future<List<ExportHistory>> fetchExportHistory() async {
-    if (_isMockMode) {
+    if (_shouldUseLocalData) {
       return StorageService.getExportHistory();
     } else {
       try {
