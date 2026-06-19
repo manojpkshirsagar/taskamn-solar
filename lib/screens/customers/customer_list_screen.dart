@@ -343,11 +343,14 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                                 backgroundColor: AppColors.primarySolarOrange.withOpacity(0.1),
                                 child: const Icon(Icons.person, color: AppColors.primarySolarOrange),
                               ),
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              title: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 8,
+                                runSpacing: 4,
                                 children: [
-                                  Expanded(
-                                    child: Text(customer.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(
+                                    customer.name,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   if (customer.customerCode != null)
                                     Container(
